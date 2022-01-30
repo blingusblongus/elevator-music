@@ -1,6 +1,5 @@
 import './App.css';
-import { useState, useEffect, useReducer } from 'react';
-// import busk from './functions/busk';
+import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
 
@@ -17,32 +16,56 @@ function App() {
     setPlayerInfo({...playerInfo, dollars: playerInfo.dollars + 1})
   }
 
-  const countSecond = () => {
+  const countSecond = (playerInfo?: PlayerInfo) => {
     setSeconds(seconds => seconds + 1);
+    return playerInfo;
   }
 
-  const busk = (...args: unknown[]) => {
-    let earnSuccess = Math.random() > .8;
-    if(!earnSuccess) return;
+  const practice = (playerInfo: PlayerInfo) => {
+    let mod = 1;
+    setPlayerInfo({...playerInfo, technique: playerInfo.technique + mod})
+    // return {...playerInfo, technique: playerInfo.technique + mod};
+  }
+
+  const busk = (playerInfo: PlayerInfo) => {
+    let earnSuccess = Math.random() > 0.8;
+    if(!earnSuccess) return playerInfo;
 
     let money = playerInfo.dollars;
-    let moneyEarned = Math.round(Math.random() * playerInfo.renown * 100) / 100;
-    money += moneyEarned;
-    console.log(moneyEarned)
-    console.log(money);
-    setPlayerInfo({...playerInfo, dollars: money});
+    let moneyEarned = Math.random() * playerInfo.renown * 0.5 ;
+    console.log('money', money)
+    console.log('moneyEarned', moneyEarned)
+    let newDollars = money + moneyEarned;
+
+    // setPlayerInfo({...playerInfo, dollars: newDollars});
+    return {...playerInfo, dollars: newDollars};
+  }
+
+  const techDecay = (playerInfo: PlayerInfo) => {
+    // setPlayerInfo({...playerInfo, technique: playerInfo.technique - .001})
+    return {...playerInfo, technique: playerInfo.technique - .001}
   }
 
 
-  let fns: Counter[] = [{fn: countSecond, args:[]}, {fn: busk, args:[]}];
+  let fns: Counter[] = [{fn: countSecond, args:[]}, 
+    {fn: techDecay, args: []},
+    {fn: busk, args:[]}];
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      fns.forEach(counter => counter.fn(...counter.args))
+    const interval = setTimeout(() => {
+      // this has to be reduce, where the passthrough var is the playerInfo
+      const newInfo = fns.reduce((p: PlayerInfo, counter) => {
+        console.log(counter.fn.name, playerInfo)
+        return p = counter.fn(p, ...counter.args);
+      }, playerInfo);
+      console.log(newInfo);
+      setPlayerInfo(newInfo);
     }, 1000);
+
     
-    return () => clearInterval(interval);
-  }, [])
+
+    return () => clearTimeout(interval);
+  })
 
   return (
     <div className="App">
@@ -50,6 +73,8 @@ function App() {
         <div>Seconds: {seconds}</div>
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
+        <div>Technique: {playerInfo.technique.toFixed(3)}</div>
+        <button onClick={() => practice(playerInfo)}>Practice</button>
       </header>
 
     </div>
