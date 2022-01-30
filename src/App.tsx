@@ -21,6 +21,8 @@ function App() {
     return playerInfo;
   }
 
+  // This pauses the count, because it rerenders and resets the timeout.
+  // I will have to count ms as the counter, in order to calculate it when clicking fast
   const practice = (playerInfo: PlayerInfo) => {
     let mod = 1;
     setPlayerInfo({...playerInfo, technique: playerInfo.technique + mod})
