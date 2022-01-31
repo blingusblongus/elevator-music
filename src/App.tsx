@@ -3,8 +3,9 @@ import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
 
-const tickCheck = 200;
+const tickCheck = 100;
 const tickDuration = 1000;
+const perSecond = 1000 / tickCheck; 
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -16,6 +17,8 @@ function App() {
     timePlayed: 0,
   });
 
+  let dTechnique = 0;
+
 
   const plusOne = () => {
     setPlayerInfo({...playerInfo, dollars: playerInfo.dollars + 1})
@@ -25,12 +28,13 @@ function App() {
   // I will have to count ms as the counter, in order to calculate it when clicking fast
   const practice = (playerInfo: PlayerInfo) => {
     let mod = 1;
-    setPlayerInfo({...playerInfo, technique: playerInfo.technique + mod})
+    dTechnique += mod;
+    // setPlayerInfo({...playerInfo, technique: playerInfo.technique + mod})
     // return {...playerInfo, technique: playerInfo.technique + mod};
   }
 
   const busk = (playerInfo: PlayerInfo) => {
-    let earnSuccess = Math.random() > 0.8;
+    let earnSuccess = Math.random() > .8;
     if(!earnSuccess) return playerInfo;
 
     let money = playerInfo.dollars;
@@ -59,7 +63,7 @@ function App() {
       console.log('tickspassed', ticksPassed)
 
       if(ticksPassed > 1){
-        for(let i=0; i<ticksPassed; i++){
+        for(let i=1; i<ticksPassed; i++){
           pInfo = fns.reduce((p: PlayerInfo, counter) => {
 
             return p = counter.fn(p, ...counter.args);
@@ -74,6 +78,7 @@ function App() {
 
       //update after ticks calculated
       setPlayerInfo({...pInfo, 
+        technique: pInfo.technique + dTechnique,
         lastTick: newTick, 
         timePlayed: timePlayed});
 
@@ -90,7 +95,7 @@ function App() {
         <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
-        <div>Technique: {playerInfo.technique.toFixed(3)}</div>
+        <div>Technique: {(playerInfo.technique + dTechnique).toFixed(2)}</div>
         <button onClick={() => practice(playerInfo)}>Practice</button>
       </header>
 
