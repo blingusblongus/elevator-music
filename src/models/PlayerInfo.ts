@@ -5,4 +5,5 @@ export interface PlayerInfo {
     startDate: number;
     lastTick: number;
     timePlayed: number;
+    practiceLog: number[];
 }

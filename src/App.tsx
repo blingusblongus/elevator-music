@@ -18,13 +18,14 @@ function App() {
     startDate: Date.now(),
     lastTick: Date.now(),
     timePlayed: 0,
+    practiceLog: [],
   });
   let dTechnique = 0;
-  let practiceLog: number[] = [];
-  let techInterval = 10000;
+  let dPracticeLog: number[] = [];
+  let techInterval = 30 * 1000;
 
   let fns: Counter[] = [ 
-    {fn: techDecay, args: [practiceLog]},
+    {fn: techDecay, args: [playerInfo.practiceLog]},
     {fn: busk, args:[]}
   ];
 
@@ -36,7 +37,7 @@ function App() {
       let ticksPassed = timePassed / tickDuration;
       let newTick = now - ((ticksPassed % 1) * tickDuration);
       let timePlayed = (now - pInfo.startDate) / 1000;
-      let simTime = now;
+      let simTime = pInfo.lastTick;
 
       if(ticksPassed > 1){
         for(let i=1; i<ticksPassed; i++){
@@ -45,6 +46,11 @@ function App() {
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
 
+          let trimIndex = pInfo.practiceLog.findIndex(l => now - l > techInterval );
+          if(trimIndex !== -1){
+            let plog = pInfo.practiceLog;
+            plog.splice(trimIndex, trimIndex + 1);
+          }
           simTime += tickDuration;
         }
       }
@@ -53,7 +59,9 @@ function App() {
       setPlayerInfo({...pInfo, 
         technique: pInfo.technique + dTechnique,
         lastTick: newTick, 
-        timePlayed: timePlayed});
+        timePlayed: timePlayed,
+        practiceLog: pInfo.practiceLog.concat(dPracticeLog),
+      });
 
     }, tickCheck);
 
@@ -62,10 +70,11 @@ function App() {
 
   const handlePractice = () => {
     dTechnique = practice(dTechnique);
-    practiceLog.push(Date.now());
+    dPracticeLog.unshift(Date.now());
+    console.log('pushed')
   }
 
-  console.log(playerInfo)
+  console.log(playerInfo.practiceLog);
 
   return (
     <div className="App">
