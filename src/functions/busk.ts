@@ -5,8 +5,10 @@ const busk = (playerInfo: PlayerInfo): PlayerInfo => {
     if(!earnSuccess) return playerInfo;
 
     let money = playerInfo.dollars;
-    let moneyEarned = Math.random() * playerInfo.renown * 0.5 ;
+    let moneyEarned = Math.random() * playerInfo.renown 
+      * 0.5 * playerInfo.technique ** .5;
     let newDollars = money + moneyEarned;
+    console.log('moneyEarned', moneyEarned);
 
     return {...playerInfo, dollars: newDollars};
   }
