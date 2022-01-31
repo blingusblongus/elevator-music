@@ -1,6 +1,6 @@
 import { PlayerInfo } from "../models/PlayerInfo";
 
-const busk = (playerInfo: PlayerInfo) => {
+const busk = (playerInfo: PlayerInfo): PlayerInfo => {
     let earnSuccess = Math.random() > .8;
     if(!earnSuccess) return playerInfo;
 

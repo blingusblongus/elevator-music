@@ -4,6 +4,7 @@ import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
 import busk from './functions/busk';
 import techDecay from './functions/techDecay';
+import practice from './functions/practice';
 
 const tickCheck = 160;
 const tickDuration = 1000;
@@ -19,14 +20,11 @@ function App() {
     timePlayed: 0,
   });
   let dTechnique = 0;
-
-  const practice = () => {
-    let mod = 1;
-    dTechnique += mod;
-  }
+  let practiceLog: number[] = [];
+  let techInterval = 10000;
 
   let fns: Counter[] = [ 
-    {fn: techDecay, args: []},
+    {fn: techDecay, args: [practiceLog]},
     {fn: busk, args:[]}
   ];
 
@@ -38,6 +36,7 @@ function App() {
       let ticksPassed = timePassed / tickDuration;
       let newTick = now - ((ticksPassed % 1) * tickDuration);
       let timePlayed = (now - pInfo.startDate) / 1000;
+      let simTime = now;
 
       if(ticksPassed > 1){
         for(let i=1; i<ticksPassed; i++){
@@ -45,6 +44,8 @@ function App() {
 
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
+
+          simTime += tickDuration;
         }
       }
 
@@ -59,6 +60,13 @@ function App() {
     return () => clearTimeout(interval);
   })
 
+  const handlePractice = () => {
+    dTechnique = practice(dTechnique);
+    practiceLog.push(Date.now());
+  }
+
+  console.log(playerInfo)
+
   return (
     <div className="App">
       <header className="App-header">
@@ -66,7 +74,7 @@ function App() {
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
         <div>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</div>
-        <button onClick={practice}>Practice</button>
+        <button onClick={handlePractice}>Practice</button>
       </header>
 
     </div>
