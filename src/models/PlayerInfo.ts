@@ -4,4 +4,5 @@ export interface PlayerInfo {
     technique: number;
     startDate: number;
     lastTick: number;
+    timePlayed: number;
 }

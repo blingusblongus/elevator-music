@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
 
-const tickSpeed = 4000;
+const tickCheck = 200;
+const tickDuration = 1000;
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -12,17 +13,12 @@ function App() {
     technique: 1,
     startDate: Date.now(),
     lastTick: Date.now(),
+    timePlayed: 0,
   });
-  const [seconds, setSeconds] = useState<number>(0);
 
 
   const plusOne = () => {
     setPlayerInfo({...playerInfo, dollars: playerInfo.dollars + 1})
-  }
-
-  const countSecond = (playerInfo?: PlayerInfo) => {
-    setSeconds(seconds => seconds + 1);
-    return playerInfo;
   }
 
   // This pauses the count, because it rerenders and resets the timeout.
@@ -41,30 +37,47 @@ function App() {
     let moneyEarned = Math.random() * playerInfo.renown * 0.5 ;
     let newDollars = money + moneyEarned;
 
-    // setPlayerInfo({...playerInfo, dollars: newDollars});
     return {...playerInfo, dollars: newDollars};
   }
 
   const techDecay = (playerInfo: PlayerInfo) => {
-    // setPlayerInfo({...playerInfo, technique: playerInfo.technique - .001})
     return {...playerInfo, technique: playerInfo.technique - .001}
   }
 
-
-  let fns: Counter[] = [{fn: countSecond, args:[]}, 
+  let fns: Counter[] = [ 
     {fn: techDecay, args: []},
-    {fn: busk, args:[]}];
+    {fn: busk, args:[]}
+  ];
 
   useEffect(() => {
     const interval = setTimeout(() => {
-      // this has to be reduce, where the passthrough var is the playerInfo
-      const newInfo = fns.reduce((p: PlayerInfo, counter) => {
-        return p = counter.fn(p, ...counter.args);
-      }, playerInfo);
-      setPlayerInfo({...newInfo, lastTick: Date.now()});
-    }, tickSpeed);
 
-    
+      let now = Date.now();
+      let timePassed = now - playerInfo.lastTick;
+      let ticksPassed = timePassed / tickDuration;
+      let pInfo = playerInfo;
+      console.log('tickspassed', ticksPassed)
+
+      if(ticksPassed > 1){
+        for(let i=0; i<ticksPassed; i++){
+          pInfo = fns.reduce((p: PlayerInfo, counter) => {
+
+            return p = counter.fn(p, ...counter.args);
+          }, pInfo);
+
+          console.log('tick processed');
+        }
+      }
+
+      let newTick = now - ((ticksPassed % 1) * tickDuration);
+      let timePlayed = (now - pInfo.startDate) / 1000;
+
+      //update after ticks calculated
+      setPlayerInfo({...pInfo, 
+        lastTick: newTick, 
+        timePlayed: timePlayed});
+
+    }, tickCheck);
 
     return () => clearTimeout(interval);
   })
@@ -74,7 +87,7 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <div>Seconds: {seconds}</div>
+        <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
         <div>Technique: {playerInfo.technique.toFixed(3)}</div>
