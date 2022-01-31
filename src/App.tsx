@@ -71,10 +71,7 @@ function App() {
   const handlePractice = () => {
     dTechnique = practice(dTechnique, playerInfo.practiceLog);
     dPracticeLog.unshift(Date.now());
-    console.log('pushed')
   }
-
-  console.log(playerInfo.practiceLog);
 
   return (
     <div className="App">
