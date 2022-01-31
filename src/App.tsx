@@ -2,8 +2,10 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
+import busk from './functions/busk';
+import techDecay from './functions/techDecay';
 
-const tickCheck = 100;
+const tickCheck = 160;
 const tickDuration = 1000;
 const perSecond = 1000 / tickCheck; 
 
@@ -16,36 +18,11 @@ function App() {
     lastTick: Date.now(),
     timePlayed: 0,
   });
-
   let dTechnique = 0;
 
-
-  const plusOne = () => {
-    setPlayerInfo({...playerInfo, dollars: playerInfo.dollars + 1})
-  }
-
-  // This pauses the count, because it rerenders and resets the timeout.
-  // I will have to count ms as the counter, in order to calculate it when clicking fast
-  const practice = (playerInfo: PlayerInfo) => {
+  const practice = () => {
     let mod = 1;
     dTechnique += mod;
-    // setPlayerInfo({...playerInfo, technique: playerInfo.technique + mod})
-    // return {...playerInfo, technique: playerInfo.technique + mod};
-  }
-
-  const busk = (playerInfo: PlayerInfo) => {
-    let earnSuccess = Math.random() > .8;
-    if(!earnSuccess) return playerInfo;
-
-    let money = playerInfo.dollars;
-    let moneyEarned = Math.random() * playerInfo.renown * 0.5 ;
-    let newDollars = money + moneyEarned;
-
-    return {...playerInfo, dollars: newDollars};
-  }
-
-  const techDecay = (playerInfo: PlayerInfo) => {
-    return {...playerInfo, technique: playerInfo.technique - .001}
   }
 
   let fns: Counter[] = [ 
@@ -55,12 +32,12 @@ function App() {
 
   useEffect(() => {
     const interval = setTimeout(() => {
-
+      let pInfo = playerInfo;
       let now = Date.now();
       let timePassed = now - playerInfo.lastTick;
       let ticksPassed = timePassed / tickDuration;
-      let pInfo = playerInfo;
-      console.log('tickspassed', ticksPassed)
+      let newTick = now - ((ticksPassed % 1) * tickDuration);
+      let timePlayed = (now - pInfo.startDate) / 1000;
 
       if(ticksPassed > 1){
         for(let i=1; i<ticksPassed; i++){
@@ -68,13 +45,8 @@ function App() {
 
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
-
-          console.log('tick processed');
         }
       }
-
-      let newTick = now - ((ticksPassed % 1) * tickDuration);
-      let timePlayed = (now - pInfo.startDate) / 1000;
 
       //update after ticks calculated
       setPlayerInfo({...pInfo, 
@@ -87,16 +59,14 @@ function App() {
     return () => clearTimeout(interval);
   })
 
-  console.log(playerInfo.lastTick)
-
   return (
     <div className="App">
       <header className="App-header">
         <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
-        <div>Technique: {(playerInfo.technique + dTechnique).toFixed(2)}</div>
-        <button onClick={() => practice(playerInfo)}>Practice</button>
+        <div>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</div>
+        <button onClick={practice}>Practice</button>
       </header>
 
     </div>
