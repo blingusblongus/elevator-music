@@ -3,11 +3,15 @@ import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
 import { Counter } from './models/Counter';
 
+const tickSpeed = 4000;
+
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
     dollars: 0,
     renown: 1,
     technique: 1,
+    startDate: Date.now(),
+    lastTick: Date.now(),
   });
   const [seconds, setSeconds] = useState<number>(0);
 
@@ -35,8 +39,6 @@ function App() {
 
     let money = playerInfo.dollars;
     let moneyEarned = Math.random() * playerInfo.renown * 0.5 ;
-    console.log('money', money)
-    console.log('moneyEarned', moneyEarned)
     let newDollars = money + moneyEarned;
 
     // setPlayerInfo({...playerInfo, dollars: newDollars});
@@ -57,17 +59,17 @@ function App() {
     const interval = setTimeout(() => {
       // this has to be reduce, where the passthrough var is the playerInfo
       const newInfo = fns.reduce((p: PlayerInfo, counter) => {
-        console.log(counter.fn.name, playerInfo)
         return p = counter.fn(p, ...counter.args);
       }, playerInfo);
-      console.log(newInfo);
-      setPlayerInfo(newInfo);
-    }, 1000);
+      setPlayerInfo({...newInfo, lastTick: Date.now()});
+    }, tickSpeed);
 
     
 
     return () => clearTimeout(interval);
   })
+
+  console.log(playerInfo.lastTick)
 
   return (
     <div className="App">
