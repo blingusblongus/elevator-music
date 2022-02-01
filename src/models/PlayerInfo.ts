@@ -6,4 +6,5 @@ export interface PlayerInfo {
     lastTick: number;
     timePlayed: number;
     practiceLog: number[];
+    maxTech: number;
 }

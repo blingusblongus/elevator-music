@@ -19,6 +19,7 @@ function App() {
     lastTick: Date.now(),
     timePlayed: 0,
     practiceLog: [],
+    maxTech: 1,
   });
   let dTechnique = 0;
   let dPracticeLog: number[] = [];
