@@ -18,16 +18,21 @@ function App() {
     practiceLog: [],
     maxTech: 1,
     buskingLog: [],
+    fns: [
+      { fn: techDecay, args: [] },
+      { fn: busk, args: [] }
+    ],
   });
   let dTechnique = 0;
   let dPracticeLog: number[] = [];
   let techInterval = 30 * 1000;
+  let activeTask = 'busk';
 
   // list of functions to pass playerInfo through on tick
-  let fns: Counter[] = [
-    { fn: techDecay, args: [] },
-    { fn: busk, args: [] }
-  ];
+  // let fns: Counter[] = [
+  //   { fn: techDecay, args: [] },
+  //   { fn: busk, args: [] }
+  // ];
 
   // Tick
   useEffect(() => {
@@ -42,12 +47,12 @@ function App() {
 
       if (ticksPassed > 1) {
         for (let i = 1; i < ticksPassed; i++) {
-          pInfo = fns.reduce((p: PlayerInfo, counter) => {
+          pInfo = pInfo.fns.reduce((p: PlayerInfo, counter) => {
 
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
 
-          let trimIndex = pInfo.practiceLog.findIndex(l => now - l > techInterval);
+          let trimIndex = pInfo.practiceLog.findIndex(l => now - l > GAME.techDecay.after);
           if (trimIndex !== -1) {
             let plog = pInfo.practiceLog;
             plog.splice(trimIndex, trimIndex + 1);
@@ -71,16 +76,24 @@ function App() {
     return () => clearTimeout(interval);
   })
 
-  const handlePractice = () => {
-    dTechnique = practice(dTechnique, playerInfo.practiceLog);
-    dPracticeLog.unshift(Date.now());
+  const startBusk = (): void => {
+    playerInfo.fns.push({fn: busk, args:[]});
+    let removeIndex = playerInfo.fns.findIndex(f => f.fn === practice)
+    playerInfo.fns.splice(removeIndex, 1);
+  }
+
+  const startPractice = (): void => {
+    playerInfo.fns.push({fn: practice, args:[]});
+    let removeIndex = playerInfo.fns.findIndex(f => f.fn === busk)
+    playerInfo.fns.splice(removeIndex, 1);
   }
 
   return (
     <div className="App">
       <header className="App-header">
         <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
-        <div className="counter-container"> 
+
+        <div className="counter-container">
           <span>
             Money: ${playerInfo.dollars.toFixed(2)}
           </span>
@@ -92,9 +105,11 @@ function App() {
               0}/sec
           </span>
         </div>
+
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
+
         <div className="counter-container">
-          <span>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</span>
+          <span>Technique: {(playerInfo.technique).toFixed(3)}</span>
           {playerInfo.practiceLog.length > GAME.practiceFatigue
             && <span className='counter-notification'>Practice fatigue...</span>}
           {playerInfo.practiceLog.length === 0
@@ -102,7 +117,12 @@ function App() {
               Haven't practiced in a while...
             </span>}
         </div>
-        <button onClick={handlePractice}>Practice</button>
+
+        <div className="action-container">
+          <button onClick={startPractice}>Practice</button>
+          <button onClick={startBusk}>Busk</button>
+        </div>
+
       </header>
 
     </div>

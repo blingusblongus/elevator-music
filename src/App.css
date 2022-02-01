@@ -40,6 +40,10 @@
   transform: translateY(15%);
 }
 
+.action-container {
+  display: flex;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

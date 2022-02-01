@@ -1,3 +1,5 @@
+import { fn } from "./fn";
+
 export interface PlayerInfo {
     dollars: number;
     renown: number;
@@ -8,4 +10,5 @@ export interface PlayerInfo {
     practiceLog: number[];
     buskingLog: number[];
     maxTech: number; 
+    fns: fn[];
 }

@@ -3,7 +3,7 @@ const GAME = {
         rate: 160,
         duration: 1000,
     },
-    practiceFatigue: 40,
+    practiceFatigue: 30,
     busk: {
         successRate: .8,
         renownMult: .5,
@@ -15,6 +15,7 @@ const GAME = {
     techDecay: {
         floor: .75,
         rate: .001,
+        after: 60 * 1000,
     }
 }
 

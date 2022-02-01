@@ -1,9 +1,14 @@
+import { PlayerInfo } from "../models/PlayerInfo";
 import GAME from "../_gameConfig/gameConfig";
 
-const practice = (dTech: number, pLog: number[]): number => {
+const practice = (playerInfo: PlayerInfo): PlayerInfo => {
     let mod = GAME.practice.mod;
-    let fatigue = pLog.length > 0 ? pLog.length : 1;
-    return dTech + mod/fatigue;
+    let fatigue = playerInfo.practiceLog.length > 0 ? 
+        playerInfo.practiceLog.length : 1;
+    
+    playerInfo.practiceLog.unshift(Date.now());
+
+    return {...playerInfo, technique: playerInfo.technique + mod/fatigue};
 }
 
 export default practice;
