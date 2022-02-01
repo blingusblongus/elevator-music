@@ -5,11 +5,7 @@ import { Counter } from './models/Counter';
 import busk from './functions/busk';
 import techDecay from './functions/techDecay';
 import practice from './functions/practice';
-
-const tickCheck = 160;
-const tickDuration = 1000;
-const perSecond = 1000 / tickCheck;
-const NUMPRACTICEFATIGUE = 40;
+import GAME from './_gameConfig/gameConfig';
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -27,18 +23,20 @@ function App() {
   let dPracticeLog: number[] = [];
   let techInterval = 30 * 1000;
 
+  // list of functions to pass playerInfo through on tick
   let fns: Counter[] = [
     { fn: techDecay, args: [] },
     { fn: busk, args: [] }
   ];
 
+  // Tick
   useEffect(() => {
     const interval = setTimeout(() => {
       let pInfo = playerInfo;
       let now = Date.now();
       let timePassed = now - playerInfo.lastTick;
-      let ticksPassed = timePassed / tickDuration;
-      let newTick = now - ((ticksPassed % 1) * tickDuration);
+      let ticksPassed = timePassed / GAME.tick.duration;
+      let newTick = now - ((ticksPassed % 1) * GAME.tick.duration);
       let timePlayed = (now - pInfo.startDate) / 1000;
       let simTime = pInfo.lastTick;
 
@@ -54,7 +52,7 @@ function App() {
             let plog = pInfo.practiceLog;
             plog.splice(trimIndex, trimIndex + 1);
           }
-          simTime += tickDuration;
+          simTime += GAME.tick.duration;
         }
       }
 
@@ -68,7 +66,7 @@ function App() {
         maxTech: Math.max(pInfo.technique, pInfo.maxTech),
       });
 
-    }, tickCheck);
+    }, GAME.tick.rate);
 
     return () => clearTimeout(interval);
   })
@@ -97,7 +95,7 @@ function App() {
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
         <div className="counter-container">
           <span>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</span>
-          {playerInfo.practiceLog.length > NUMPRACTICEFATIGUE
+          {playerInfo.practiceLog.length > GAME.practiceFatigue
             && <span className='counter-notification'>Practice fatigue...</span>}
           {playerInfo.practiceLog.length === 0
             && <span className='counter-notification'>
