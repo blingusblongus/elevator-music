@@ -1,4 +1,4 @@
-export default {
+const GAME = {
     tick: {
         rate: 160,
         duration: 1000,
@@ -17,3 +17,5 @@ export default {
         rate: .001,
     }
 }
+
+export default GAME;
