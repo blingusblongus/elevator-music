@@ -9,6 +9,7 @@ import practice from './functions/practice';
 const tickCheck = 160;
 const tickDuration = 1000;
 const perSecond = 1000 / tickCheck; 
+const NUMPRACTICEFATIGUE = 20;
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -82,7 +83,12 @@ function App() {
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
         <div className="counter-container">
           <span>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</span>
-          {dPracticeLog.length > 0 && <span className='counter-notification'>Fatigued...</span>}
+          {playerInfo.practiceLog.length > NUMPRACTICEFATIGUE 
+            && <span className='counter-notification'>Fatigued...</span>}
+          {playerInfo.practiceLog.length === 0 
+            && <span className='counter-notification'>
+              Haven't practiced in a while...
+              </span>}
         </div>
         <button onClick={handlePractice}>Practice</button>
       </header>
