@@ -97,10 +97,10 @@ function App() {
           </span>
           <span className='counter-notification'>
             + ${playerInfo.buskingLog.length > 0 ?
-              (playerInfo.buskingLog.reduce((sum, el) => sum += el, 0)
+              (playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00)
                 / playerInfo.buskingLog.length).toFixed(2)
               :
-              0}/sec
+              '0.00'}/sec
           </span>
         </div>
 
@@ -129,7 +129,7 @@ function App() {
           </button>
         </div>
 
-        <div>Current Activity: {activeTask}</div>
+        <div className='counter-notification'>Current Activity: {activeTask}</div>
 
       </header>
 
@@ -139,7 +139,8 @@ function App() {
 
 const styles = {
   activeBtn: {
-    color: 'red',
+    color: 'green',
+    border: '2px solid green',
   }
 }
 
