@@ -1,7 +1,6 @@
 import './App.css';
 import { useState, useEffect } from 'react';
 import { PlayerInfo } from './models/PlayerInfo';
-import { Counter } from './models/Counter';
 import busk from './functions/busk';
 import techDecay from './functions/techDecay';
 import practice from './functions/practice';
@@ -22,17 +21,11 @@ function App() {
       { fn: techDecay, args: [] },
       { fn: busk, args: [] }
     ],
+    activity: 'None',
   });
   let dTechnique = 0;
   let dPracticeLog: number[] = [];
-  let techInterval = 30 * 1000;
-  let activeTask = 'busk';
-
-  // list of functions to pass playerInfo through on tick
-  // let fns: Counter[] = [
-  //   { fn: techDecay, args: [] },
-  //   { fn: busk, args: [] }
-  // ];
+  let activeTask = playerInfo.activity;
 
   // Tick
   useEffect(() => {
@@ -69,6 +62,7 @@ function App() {
         timePlayed: timePlayed,
         practiceLog: pInfo.practiceLog.concat(dPracticeLog),
         maxTech: Math.max(pInfo.technique, pInfo.maxTech),
+        activity: activeTask,
       });
 
     }, GAME.tick.rate);
@@ -77,15 +71,19 @@ function App() {
   })
 
   const startBusk = (): void => {
-    playerInfo.fns.push({fn: busk, args:[]});
+    playerInfo.fns.push({ fn: busk, args: [] });
     let removeIndex = playerInfo.fns.findIndex(f => f.fn === practice)
     playerInfo.fns.splice(removeIndex, 1);
+    activeTask = 'Busking'
+    playerInfo.buskingLog = [];
   }
 
   const startPractice = (): void => {
-    playerInfo.fns.push({fn: practice, args:[]});
+    playerInfo.fns.push({ fn: practice, args: [] });
     let removeIndex = playerInfo.fns.findIndex(f => f.fn === busk)
     playerInfo.fns.splice(removeIndex, 1);
+    activeTask = 'Practicing'
+    playerInfo.buskingLog = [];
   }
 
   return (
@@ -119,14 +117,30 @@ function App() {
         </div>
 
         <div className="action-container">
-          <button onClick={startPractice}>Practice</button>
-          <button onClick={startBusk}>Busk</button>
+          <button
+            onClick={startPractice}
+            style={activeTask === 'Practicing' ? styles.activeBtn : {}}>
+            Practice
+          </button>
+          <button
+            onClick={startBusk}
+            style={activeTask === 'Busking' ? styles.activeBtn : {}}>
+            Busk
+          </button>
         </div>
+
+        <div>Current Activity: {activeTask}</div>
 
       </header>
 
     </div>
   );
+}
+
+const styles = {
+  activeBtn: {
+    color: 'red',
+  }
 }
 
 export default App;

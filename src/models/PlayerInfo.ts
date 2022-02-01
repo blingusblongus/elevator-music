@@ -1,4 +1,4 @@
-import { fn } from "./fn";
+import { Counter } from "./Counter";
 
 export interface PlayerInfo {
     dollars: number;
@@ -10,5 +10,6 @@ export interface PlayerInfo {
     practiceLog: number[];
     buskingLog: number[];
     maxTech: number; 
-    fns: fn[];
+    fns: Counter[];
+    activity: string;
 }
