@@ -7,6 +7,7 @@ const GAME = {
     busk: {
         successRate: .8,
         multiplier: .1,
+        renown: .001,
     },
     practice: {
         mod: 1,

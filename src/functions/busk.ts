@@ -3,6 +3,8 @@ import GAME from "../_gameConfig/gameConfig";
 
 const busk = (playerInfo: PlayerInfo): PlayerInfo => {
     let earnSuccess = Math.random() > GAME.busk.successRate;
+    playerInfo.renown += GAME.busk.renown;
+
     if(!earnSuccess) return {...playerInfo, 
       buskingLog: [...playerInfo.buskingLog, 0],
     };
@@ -14,7 +16,8 @@ const busk = (playerInfo: PlayerInfo): PlayerInfo => {
 
     return {...playerInfo, 
       dollars: newDollars, 
-      buskingLog: [...playerInfo.buskingLog, moneyEarned]};
+      buskingLog: [...playerInfo.buskingLog, moneyEarned],
+    };
   }
 
   export default busk;
