@@ -9,7 +9,7 @@ const busk = (playerInfo: PlayerInfo): PlayerInfo => {
 
     let money = playerInfo.dollars;
     let moneyEarned = Math.random() * playerInfo.renown 
-      * GAME.busk.renownMult * playerInfo.technique ** GAME.busk.techniquePow;
+      * playerInfo.technique * GAME.busk.multiplier;
     let newDollars = money + moneyEarned;
 
     return {...playerInfo, 

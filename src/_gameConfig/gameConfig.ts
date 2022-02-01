@@ -6,8 +6,7 @@ const GAME = {
     practiceFatigue: 30,
     busk: {
         successRate: .8,
-        renownMult: .5,
-        techniquePow: .5,
+        multiplier: .1,
     },
     practice: {
         mod: 1,
