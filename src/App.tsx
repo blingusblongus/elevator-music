@@ -5,7 +5,6 @@ import busk from './functions/busk';
 import techDecay from './functions/techDecay';
 import practice from './functions/practice';
 import GAME from './_gameConfig/gameConfig';
-import { spawn } from 'child_process';
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -24,9 +23,12 @@ function App() {
     ],
     activity: 'None',
   });
-  let dTechnique = 0;
-  let dPracticeLog: number[] = [];
+
   let activeTask = playerInfo.activity;
+  let buskSum = playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00);
+  let buskAvg = playerInfo.buskingLog.length > 0 
+    ? buskSum / playerInfo.buskingLog.length
+    : 0.00;
 
   // Tick
   useEffect(() => {
@@ -41,8 +43,8 @@ function App() {
 
       if (ticksPassed > 1) {
         for (let i = 1; i < ticksPassed; i++) {
+          // pass playerInfo through all the counter functions
           pInfo = pInfo.fns.reduce((p: PlayerInfo, counter) => {
-
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
 
@@ -58,10 +60,8 @@ function App() {
       //update after ticks calculated
       setPlayerInfo({
         ...pInfo,
-        technique: pInfo.technique + dTechnique,
         lastTick: newTick,
         timePlayed: timePlayed,
-        practiceLog: pInfo.practiceLog.concat(dPracticeLog),
         maxTech: Math.max(pInfo.technique, pInfo.maxTech),
         activity: activeTask,
       });
@@ -86,11 +86,6 @@ function App() {
     activeTask = 'Practicing'
     playerInfo.buskingLog = [];
   }
-
-  let buskSum = playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00);
-  let buskAvg = playerInfo.buskingLog.length > 0 
-    ? buskSum / playerInfo.buskingLog.length
-    : 0.00;
 
   return (
     <div className="App">
