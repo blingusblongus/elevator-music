@@ -5,6 +5,7 @@ import busk from './functions/busk';
 import techDecay from './functions/techDecay';
 import practice from './functions/practice';
 import GAME from './_gameConfig/gameConfig';
+import { spawn } from 'child_process';
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -86,6 +87,11 @@ function App() {
     playerInfo.buskingLog = [];
   }
 
+  let buskSum = playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00);
+  let buskAvg = playerInfo.buskingLog.length > 0 
+    ? buskSum / playerInfo.buskingLog.length
+    : 0.00;
+
   return (
     <div className="App">
       <header className="App-header">
@@ -97,10 +103,10 @@ function App() {
           </span>
           <span className='counter-notification'>
             + ${playerInfo.buskingLog.length > 0 ?
-              (playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00)
-                / playerInfo.buskingLog.length).toFixed(2)
+              buskAvg.toFixed(2)
               :
-              '0.00'}/sec
+              '0.00'}/sec     {activeTask === 'Busking' && `( + $${buskSum.toFixed(2)} )`}
+              
           </span>
         </div>
 
