@@ -9,7 +9,7 @@ import practice from './functions/practice';
 const tickCheck = 160;
 const tickDuration = 1000;
 const perSecond = 1000 / tickCheck; 
-const NUMPRACTICEFATIGUE = 20;
+const NUMPRACTICEFATIGUE = 40;
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -21,6 +21,7 @@ function App() {
     timePlayed: 0,
     practiceLog: [],
     maxTech: 1,
+    buskingLog: [],
   });
   let dTechnique = 0;
   let dPracticeLog: number[] = [];
@@ -63,6 +64,7 @@ function App() {
         lastTick: newTick, 
         timePlayed: timePlayed,
         practiceLog: pInfo.practiceLog.concat(dPracticeLog),
+        maxTech: Math.max(pInfo.technique, pInfo.maxTech),
       });
 
     }, tickCheck);
