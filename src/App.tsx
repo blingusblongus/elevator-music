@@ -8,7 +8,7 @@ import practice from './functions/practice';
 
 const tickCheck = 160;
 const tickDuration = 1000;
-const perSecond = 1000 / tickCheck; 
+const perSecond = 1000 / tickCheck;
 const NUMPRACTICEFATIGUE = 40;
 
 function App() {
@@ -27,9 +27,9 @@ function App() {
   let dPracticeLog: number[] = [];
   let techInterval = 30 * 1000;
 
-  let fns: Counter[] = [ 
-    {fn: techDecay, args: [playerInfo.practiceLog]},
-    {fn: busk, args:[]}
+  let fns: Counter[] = [
+    { fn: techDecay, args: [] },
+    { fn: busk, args: [] }
   ];
 
   useEffect(() => {
@@ -42,15 +42,15 @@ function App() {
       let timePlayed = (now - pInfo.startDate) / 1000;
       let simTime = pInfo.lastTick;
 
-      if(ticksPassed > 1){
-        for(let i=1; i<ticksPassed; i++){
+      if (ticksPassed > 1) {
+        for (let i = 1; i < ticksPassed; i++) {
           pInfo = fns.reduce((p: PlayerInfo, counter) => {
 
             return p = counter.fn(p, ...counter.args);
           }, pInfo);
 
-          let trimIndex = pInfo.practiceLog.findIndex(l => now - l > techInterval );
-          if(trimIndex !== -1){
+          let trimIndex = pInfo.practiceLog.findIndex(l => now - l > techInterval);
+          if (trimIndex !== -1) {
             let plog = pInfo.practiceLog;
             plog.splice(trimIndex, trimIndex + 1);
           }
@@ -59,9 +59,10 @@ function App() {
       }
 
       //update after ticks calculated
-      setPlayerInfo({...pInfo, 
+      setPlayerInfo({
+        ...pInfo,
         technique: pInfo.technique + dTechnique,
-        lastTick: newTick, 
+        lastTick: newTick,
         timePlayed: timePlayed,
         practiceLog: pInfo.practiceLog.concat(dPracticeLog),
         maxTech: Math.max(pInfo.technique, pInfo.maxTech),
@@ -81,16 +82,27 @@ function App() {
     <div className="App">
       <header className="App-header">
         <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
-        <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
+        <div className="counter-container"> 
+          <span>
+            Money: ${playerInfo.dollars.toFixed(2)}
+          </span>
+          <span className='counter-notification'>
+            + ${playerInfo.buskingLog.length > 0 ?
+              (playerInfo.buskingLog.reduce((sum, el) => sum += el, 0)
+                / playerInfo.buskingLog.length).toFixed(2)
+              :
+              0}/sec
+          </span>
+        </div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
         <div className="counter-container">
           <span>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</span>
-          {playerInfo.practiceLog.length > NUMPRACTICEFATIGUE 
-            && <span className='counter-notification'>Fatigued...</span>}
-          {playerInfo.practiceLog.length === 0 
+          {playerInfo.practiceLog.length > NUMPRACTICEFATIGUE
+            && <span className='counter-notification'>Practice fatigue...</span>}
+          {playerInfo.practiceLog.length === 0
             && <span className='counter-notification'>
               Haven't practiced in a while...
-              </span>}
+            </span>}
         </div>
         <button onClick={handlePractice}>Practice</button>
       </header>

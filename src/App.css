@@ -34,9 +34,10 @@
 }
 
 .counter-notification {
-  margin-left: 5px;
-  font-size: 10px;
+  margin-left: 13px;
+  font-size: 12px;
   color: 'grey';
+  transform: translateY(15%);
 }
 
 @keyframes App-logo-spin {
