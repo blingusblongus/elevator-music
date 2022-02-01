@@ -80,7 +80,10 @@ function App() {
         <div>Seconds: {playerInfo.timePlayed.toFixed()}</div>
         <div>Money: ${playerInfo.dollars.toFixed(2)}</div>
         <div>Renown: {playerInfo.renown.toFixed(2)}</div>
-        <div>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</div>
+        <div className="counter-container">
+          <span>Technique: {(playerInfo.technique + dTechnique).toFixed(3)}</span>
+          {dPracticeLog.length > 0 && <span className='counter-notification'>Fatigued...</span>}
+        </div>
         <button onClick={handlePractice}>Practice</button>
       </header>
 
