@@ -26,8 +26,6 @@ function App() {
     activity: 'None',
   });
 
-  let activeTask = playerInfo.activity;
-
   // Tick
   useEffect(() => {
     const interval = setTimeout(() => {
@@ -61,7 +59,7 @@ function App() {
         lastTick: newTick,
         timePlayed: timePlayed,
         maxTech: Math.max(pInfo.technique, pInfo.maxTech),
-        activity: activeTask,
+        activity: playerInfo.activity,
       });
 
     }, GAME.tick.rate);
@@ -72,10 +70,9 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Counters playerInfo={playerInfo} activeTask={activeTask} />
-        <Activity playerInfo={playerInfo} activeTask={activeTask} />
+        <Counters playerInfo={playerInfo} />
+        <Activity playerInfo={playerInfo} />
       </header>
-
     </div>
   );
 }

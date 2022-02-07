@@ -5,15 +5,14 @@ import practice from '../../functions/practice';
 
 interface Props {
     playerInfo: PlayerInfo;
-    activeTask: string;
 }
 
-const Activity: React.FC<Props> = ({ playerInfo, activeTask }): JSX.Element => {
+const Activity: React.FC<Props> = ({ playerInfo }): JSX.Element => {
     const startBusk = (): void => {
         playerInfo.fns.push({ fn: busk, args: [] });
         let removeIndex = playerInfo.fns.findIndex(f => f.fn === practice)
         playerInfo.fns.splice(removeIndex, 1);
-        activeTask = 'Busking'
+        playerInfo.activity = 'Busking'
         playerInfo.buskingLog = [];
     }
 
@@ -21,7 +20,7 @@ const Activity: React.FC<Props> = ({ playerInfo, activeTask }): JSX.Element => {
         playerInfo.fns.push({ fn: practice, args: [] });
         let removeIndex = playerInfo.fns.findIndex(f => f.fn === busk)
         playerInfo.fns.splice(removeIndex, 1);
-        activeTask = 'Practicing'
+        playerInfo.activity = 'Practicing'
         playerInfo.buskingLog = [];
     }
 
@@ -29,17 +28,17 @@ const Activity: React.FC<Props> = ({ playerInfo, activeTask }): JSX.Element => {
         <div className="action-container">
             <button
                 onClick={startPractice}
-                style={activeTask === 'Practicing' ? styles.activeBtn : {}}>
+                style={playerInfo.activity === 'Practicing' ? styles.activeBtn : {}}>
                 Practice
             </button>
             <button
                 onClick={startBusk}
-                style={activeTask === 'Busking' ? styles.activeBtn : {}}>
+                style={playerInfo.activity === 'Busking' ? styles.activeBtn : {}}>
                 Busk
             </button>
         </div>
 
-        <div className='counter-notification'>Current Activity: {activeTask}</div>
+        <div className='counter-notification'>Current Activity: {playerInfo.activity}</div>
     </div>;
 };
 

@@ -4,10 +4,9 @@ import GAME from '../../_gameConfig/gameConfig'
 
 interface Props {
     playerInfo: PlayerInfo;
-    activeTask: string;
 }
 
-const Counters: React.FC<Props> = ({ playerInfo, activeTask }): JSX.Element => {
+const Counters: React.FC<Props> = ({ playerInfo }): JSX.Element => {
 
     let buskSum = playerInfo.buskingLog.reduce((sum, el) => sum += el, 0.00);
     let buskAvg = playerInfo.buskingLog.length > 0
@@ -24,7 +23,7 @@ const Counters: React.FC<Props> = ({ playerInfo, activeTask }): JSX.Element => {
                 + ${playerInfo.buskingLog.length > 0 ?
                     buskAvg.toFixed(2)
                     :
-                    '0.00'}/sec     {activeTask === 'Busking' && `( + $${buskSum.toFixed(2)} )`}
+                    '0.00'}/sec     {playerInfo.activity === 'Busking' && `( + $${buskSum.toFixed(2)} )`}
 
             </span>
         </div>
