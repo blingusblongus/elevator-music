@@ -6,6 +6,7 @@ import techDecay from './functions/techDecay';
 import practice from './functions/practice';
 import GAME from './_gameConfig/gameConfig';
 import Counters from './components/Counters/Counters';
+import Activity from './components/Activity/Activity';
 
 function App() {
   const [playerInfo, setPlayerInfo] = useState<PlayerInfo>({
@@ -68,52 +69,15 @@ function App() {
     return () => clearTimeout(interval);
   })
 
-  const startBusk = (): void => {
-    playerInfo.fns.push({ fn: busk, args: [] });
-    let removeIndex = playerInfo.fns.findIndex(f => f.fn === practice)
-    playerInfo.fns.splice(removeIndex, 1);
-    activeTask = 'Busking'
-    playerInfo.buskingLog = [];
-  }
-
-  const startPractice = (): void => {
-    playerInfo.fns.push({ fn: practice, args: [] });
-    let removeIndex = playerInfo.fns.findIndex(f => f.fn === busk)
-    playerInfo.fns.splice(removeIndex, 1);
-    activeTask = 'Practicing'
-    playerInfo.buskingLog = [];
-  }
-
   return (
     <div className="App">
       <header className="App-header">
         <Counters playerInfo={playerInfo} activeTask={activeTask} />
-        <div className="action-container">
-          <button
-            onClick={startPractice}
-            style={activeTask === 'Practicing' ? styles.activeBtn : {}}>
-            Practice
-          </button>
-          <button
-            onClick={startBusk}
-            style={activeTask === 'Busking' ? styles.activeBtn : {}}>
-            Busk
-          </button>
-        </div>
-
-        <div className='counter-notification'>Current Activity: {activeTask}</div>
-
+        <Activity playerInfo={playerInfo} activeTask={activeTask} />
       </header>
 
     </div>
   );
-}
-
-const styles = {
-  activeBtn: {
-    color: 'green',
-    border: '2px solid green',
-  }
 }
 
 export default App;
